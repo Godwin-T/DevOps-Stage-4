@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    environment:
+      - PORT=${PORT}
+      - AUTH_API_ADDRESS=${AUTH_API_ADDRESS}
+      - TODOS_API_ADDRESS=${TODOS_API_ADDRESS}
+    expose:
+      - ${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - auth-api
+      - todos-api
+      - users-api
+
+  auth-api: 
+    build: ./auth-api
+    environment:
+      - AUTH_API_PORT=${AUTH_API_PORT}
+      - USERS_API_ADDRESS=${USERS_API_ADDRESS}
+      - JWT_SECRET=${JWT_SECRET}
+    expose:
+      - ${AUTH_API_PORT}
+    ports:
+      - "${AUTH_API_PORT}:${AUTH_API_PORT}"
+ 
+  todos-api:
+    build: ./todos-api
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_CHANNEL=${REDIS_CHANNEL}
+      - JWT_SECRET=${JWT_SECRET}
+      - TODO_API_PORT=${TODO_API_PORT}
+    expose:
+      - ${TODO_API_PORT}
+    ports:
+      - "${TODO_API_PORT}:${TODO_API_PORT}"
+    depends_on:
+      - redis-queue
+
+  users-api:
+    build: ./users-api
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - SERVER_PORT=${SERVER_PORT}
+    expose:
+      - ${SERVER_PORT}
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+
+  log-processor:
+    build: ./log-message-processor
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_CHANNEL=${REDIS_CHANNEL}
+  
+
+  redis-queue:
+    image: redis:latest
+    restart: always
+    environment:
+      - REDIS_PORT=${REDIS_PORT}
+    expose:
+      - ${REDIS_PORT}
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
