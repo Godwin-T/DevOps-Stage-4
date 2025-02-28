@@ -7,8 +7,6 @@ WORKDIR /app
 # Copy the entire project
 COPY . .
 
-#RUN chmod +x ./mvnw || true
-
 # Build the project without running tests
 RUN mvn clean install -DskipTests
 
