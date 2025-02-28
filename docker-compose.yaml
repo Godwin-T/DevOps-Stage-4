@@ -33,7 +33,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`34.219.238.83`)"
-      - "traefik.http.routers.frontend.entrypoints=http"
+      - "traefik.http.routers.frontend.entrypoints=https"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
       - "traefik.http.services.frontend.loadbalancer.server.port=${PORT}"
 
@@ -52,7 +52,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.auth.rule=Host(`34.219.238.83`) && PathPrefix(`/api/auth`)"
-      - "traefik.http.routers.auth.entrypoints=http"
+      - "traefik.http.routers.auth.entrypoints=https"
       - "traefik.http.services.auth.loadbalancer.server.port=${AUTH_API_PORT}"
 
   todos-api:
@@ -66,7 +66,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.todos.rule=Host(`34.219.238.83`) && PathPrefix(`/api/todos`)"
-      - "traefik.http.routers.todos.entrypoints=http"
+      - "traefik.http.routers.todos.entrypoints=https"
       - "traefik.http.services.todos.loadbalancer.server.port=${TODO_API_PORT}"
     depends_on:
       - redis-queue
@@ -79,7 +79,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.users.rule=Host(`34.219.238.83`) && PathPrefix(`/api/users`)"
-      - "traefik.http.routers.users.entrypoints=http"
+      - "traefik.http.routers.users.entrypoints=https"
       - "traefik.http.services.users.loadbalancer.server.port=${SERVER_PORT}"
 
   log-processor:
