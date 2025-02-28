@@ -32,7 +32,7 @@ services:
       - TODOS_API_ADDRESS=${TODOS_API_ADDRESS}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`{{ .HostIP }}`)"
+      - "traefik.http.routers.frontend.rule=Host(`35.89.226.91`)"
       - "traefik.http.routers.frontend.entrypoints=https"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
       - "traefik.http.services.frontend.loadbalancer.server.port=${PORT}"
@@ -51,7 +51,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.auth.rule=Host(`auth.{{ .HostIP }}`)"
+      - "traefik.http.routers.auth.rule=Host(`auth.35.89.226.91`)"
       - "traefik.http.routers.auth.entrypoints=https"
       - "traefik.http.services.auth.loadbalancer.server.port=${AUTH_API_PORT}"
 
@@ -65,7 +65,7 @@ services:
       - TODO_API_PORT=${TODO_API_PORT}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.todos.rule=Host(`todos.{{ .HostIP }}`)"
+      - "traefik.http.routers.todos.rule=Host(`todos.35.89.226.91`)"
       - "traefik.http.routers.todos.entrypoints=https"
       - "traefik.http.services.todos.loadbalancer.server.port=${TODO_API_PORT}"
     depends_on:
@@ -78,7 +78,7 @@ services:
       - SERVER_PORT=${SERVER_PORT}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.users.rule=Host(`users.{{ .HostIP }}`)"
+      - "traefik.http.routers.users.rule=Host(`users.35.89.226.91`)"
       - "traefik.http.routers.users.entrypoints=https"
       - "traefik.http.services.users.loadbalancer.server.port=${SERVER_PORT}"
 
@@ -94,3 +94,6 @@ services:
     restart: always
     environment:
       - REDIS_PORT=${REDIS_PORT}
+
+
+
