@@ -52,6 +52,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.auth.rule=Host(`34.219.238.83`) && PathPrefix(`/api/auth`)"
+      - "traefik.http.routers.auth.middlewares=strip-auth-prefix"
+      - "traefik.http.middlewares.strip-auth-prefix.stripprefix.prefixes=/api/auth"
       - "traefik.http.routers.auth.entrypoints=https"
       - "traefik.http.services.auth.loadbalancer.server.port=${AUTH_API_PORT}"
 
@@ -66,6 +68,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.todos.rule=Host(`34.219.238.83`) && PathPrefix(`/api/todos`)"
+      - "traefik.http.routers.todos.middlewares=strip-todos-prefix"
+      - "traefik.http.middlewares.strip-todos-prefix.stripprefix.prefixes=/api/todos"
       - "traefik.http.routers.todos.entrypoints=https"
       - "traefik.http.services.todos.loadbalancer.server.port=${TODO_API_PORT}"
     depends_on:
@@ -79,6 +83,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.users.rule=Host(`34.219.238.83`) && PathPrefix(`/api/users`)"
+      - "traefik.http.routers.users.middlewares=strip-users-prefix"
+      - "traefik.http.middlewares.strip-users-prefix.stripprefix.prefixes=/api/users"
       - "traefik.http.routers.users.entrypoints=https"
       - "traefik.http.services.users.loadbalancer.server.port=${SERVER_PORT}"
 
@@ -94,6 +100,105 @@ services:
     restart: always
     environment:
       - REDIS_PORT=${REDIS_PORT}
+
+
+
+# version: '3.8'
+
+# services:
+
+#   traefik:
+#     image: traefik:v2.9
+#     container_name: traefik
+#     restart: always
+#     command:
+#       - "--entrypoints.http.address=:80"
+#       # - "--entrypoints.http.http.redirections.entryPoint.to=https"
+#       # - "--entrypoints.http.http.redirections.entryPoint.scheme=https"
+#       - "--entrypoints.https.address=:443"
+#       - "--providers.docker=true"
+#       - "--providers.docker.exposedbydefault=false"
+#       - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
+#       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+#       - "--certificatesresolvers.myresolver.acme.httpChallenge.entryPoint=http"
+#     ports:
+#       - "80:80"
+#       - "443:443"
+#     volumes:
+#       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+#       - "./letsencrypt:/letsencrypt"
+ 
+
+#   frontend:
+#     build: ./frontend
+#     environment:
+#       - PORT=${PORT}
+#       - AUTH_API_ADDRESS=${AUTH_API_ADDRESS}
+#       - TODOS_API_ADDRESS=${TODOS_API_ADDRESS}
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.frontend.rule=Host(`localhost`)"
+#       - "traefik.http.routers.frontend.entrypoints=http"
+#       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
+#       - "traefik.http.services.frontend.loadbalancer.server.port=${PORT}"
+
+#     depends_on:
+#       - auth-api
+#       - todos-api
+#       - users-api
+
+
+#   auth-api: 
+#     build: ./auth-api
+#     environment:
+#       - AUTH_API_PORT=${AUTH_API_PORT}
+#       - USERS_API_ADDRESS=${USERS_API_ADDRESS}
+#       - JWT_SECRET=${JWT_SECRET}
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.auth.rule=Host(`localhost`) && PathPrefix(`/api/auth`)"
+#       - "traefik.http.routers.auth.entrypoints=http"
+#       - "traefik.http.services.auth.loadbalancer.server.port=${AUTH_API_PORT}"
+
+#   todos-api:
+#     build: ./todos-api
+#     environment:
+#       - REDIS_HOST=${REDIS_HOST}
+#       - REDIS_PORT=${REDIS_PORT}
+#       - REDIS_CHANNEL=${REDIS_CHANNEL}
+#       - JWT_SECRET=${JWT_SECRET}
+#       - TODO_API_PORT=${TODO_API_PORT}
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.todos.rule=Host(`localhost`) && PathPrefix(`/api/todos`)"
+#       - "traefik.http.routers.todos.entrypoints=http"
+#       - "traefik.http.services.todos.loadbalancer.server.port=${TODO_API_PORT}"
+#     depends_on:
+#       - redis-queue
+
+#   users-api:
+#     build: ./users-api
+#     environment:
+#       - JWT_SECRET=${JWT_SECRET}
+#       - SERVER_PORT=${SERVER_PORT}
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.users.rule=Host(`localhost`) && PathPrefix(`/api/users`)"
+#       - "traefik.http.routers.users.entrypoints=http"
+#       - "traefik.http.services.users.loadbalancer.server.port=${SERVER_PORT}"
+
+#   log-processor:
+#     build: ./log-message-processor
+#     environment:
+#       - REDIS_HOST=${REDIS_HOST}
+#       - REDIS_PORT=${REDIS_PORT}
+#       - REDIS_CHANNEL=${REDIS_CHANNEL}
+
+#   redis-queue:
+#     image: redis:latest
+#     restart: always
+#     environment:
+#       - REDIS_PORT=${REDIS_PORT}
 
 
 
