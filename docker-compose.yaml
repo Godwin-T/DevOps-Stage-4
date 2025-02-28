@@ -32,7 +32,7 @@ services:
       - TODOS_API_ADDRESS=${TODOS_API_ADDRESS}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`34.219.238.83`)"
+      - "traefik.http.routers.frontend.rule=Host(`34.219.238.83`) && PathPrefix(`/`)"
       - "traefik.http.routers.frontend.entrypoints=https"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
       - "traefik.http.services.frontend.loadbalancer.server.port=${PORT}"
