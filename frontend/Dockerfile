@@ -13,5 +13,5 @@ RUN npm install
 # Copy application files
 COPY . .
 
-# CMD [ "npm", "run", "dev" ]
-CMD ["npm", "run", "build"]
+CMD [ "npm", "run", "dev" ]
+# CMD ["npm", "run", "build"]
